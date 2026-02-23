@@ -15,7 +15,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #Dependencies 
 
-find_package(Boost REQUIRED)
 find_package(Threads REQUIRED)
 find_package(glfw3 3.3 REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -45,10 +44,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     glfw
     GL 
     ${WAYLAND_LIBS_LIBRARIES}
-    Boost::headers
     pthread 
-    Xrandr
-    Xi 
     dl
 )
 
