@@ -2,16 +2,19 @@
 #include <stdexcept>
 #include <format>
 
+extern "C" {
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
+}
+
 
 #define DEFAULT_WINDOW_WIDTH 800
 #define DEFAULT_WINDOW_HEIGHT 600
 
 const char *vertexShaderSource = 
 "#version 330 core\n"
-"layout (location = 0) in vec3 aPos; fsdkjf\n"
+"layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
@@ -63,19 +66,6 @@ int main() {
     glViewport(0, 0, DEFAULT_WINDOW_WIDTH , DEFAULT_WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    unsigned int vertexBufferObj;
-    {
-        float vertices[] ={
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f
-        };
-
-        glGenBuffers(1, &vertexBufferObj);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    }
-
     unsigned int vertexShader;
     {
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -86,6 +76,7 @@ int main() {
         char infoLog[512];
         glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
         if (!success) {
+            glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
             throw std::runtime_error(std::format("Failed to compile vertex shader: {}", infoLog));
         }
     }
@@ -100,8 +91,51 @@ int main() {
         char infoLog[512];
         glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
         if (!success) {
+            glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
             throw std::runtime_error(std::format("Failed to compile fragment shader: {}", infoLog));
         }
+    }
+
+    unsigned int shaderProgram;
+    {
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+
+        int  success;
+        char infoLog[512];
+        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
+            throw std::runtime_error(std::format("Failed to compile fragment shader: {}", infoLog));
+        }
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+    }
+
+    unsigned int vertexArrayObj;
+    unsigned int vertexBufferObj;
+    {
+        float vertices[] ={
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.0f,  0.5f, 0.0f
+        };
+
+        glGenVertexArrays(1, &vertexArrayObj);  
+        glGenBuffers(1, &vertexBufferObj);
+
+        glBindVertexArray(vertexArrayObj);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObj);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);      //performs a copy so should be safe to clear array here
+                                                                                        
+        //set vertex attribute pointers
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glBindVertexArray(0);
     }
 
 
@@ -112,12 +146,22 @@ int main() {
         //rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        
+        glUseProgram(shaderProgram);
+        glBindVertexArray(vertexArrayObj);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();    
     }
     
-    glfwTerminate();
+    //CleanUp
+    {
+        glDeleteVertexArrays(1, &vertexArrayObj);
+        glDeleteBuffers(1, &vertexBufferObj);
+        glDeleteProgram(shaderProgram);
+        glfwTerminate();
+    }
     std::cout << "Done\n";
     return 0;
 }
