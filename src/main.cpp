@@ -7,28 +7,12 @@ extern "C" {
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
+#include <cmath>
 }
 
 
 #define DEFAULT_WINDOW_WIDTH 800
 #define DEFAULT_WINDOW_HEIGHT 600
-
-const char *vertexShaderSource = 
-"#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-const char* fragShaderSource = 
-"#version 330 core\n" 
-"out vec4 FragColor;\n"
-
-"void main()\n"
-"{\n"
-"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0"; 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -106,7 +90,7 @@ int main() {
 
         int  success;
         char infoLog[512];
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+        glGetShaderiv(shaderProgram, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
             throw std::runtime_error(std::format("Failed to compile fragment shader: {}", infoLog));
@@ -153,6 +137,7 @@ int main() {
     }
 
 
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "fragCol");
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
@@ -160,8 +145,13 @@ int main() {
         //rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        
-        glUseProgram(shaderProgram);
+
+        //Color stuff            
+        float timeValue = glfwGetTime();
+        float greenVal = (sin(timeValue / 2.0)) + 0.5f;
+        glUseProgram(shaderProgram);     
+
+        glUniform4f(vertexColorLocation, 0.0f, greenVal, 0.0f, 1.0f);
 
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
