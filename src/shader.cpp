@@ -28,6 +28,10 @@ Shader::Shader(const std::string &vertPath, const std::string &fragPath) {
     glDeleteShader(fragShaderId);
 }
 
+Shader::~Shader() {
+    glDeleteProgram(this->shaderProgram);
+}
+
 
 std::string Shader::loadShaderFileFromDisk(const std::string &path) {
     std::ifstream file(path);
