@@ -1,5 +1,7 @@
+#include "vao_wrapper.h"
 #include <cstdio>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <shader.h>
 
@@ -55,42 +57,19 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     Shader shader(VERTEX_SHADER_PATH, FRAG_SHADER_PATH);
-    unsigned int vao, vertexBuf, indexBuf;
-    {
-        float vertices[] = {
-            0.5f,  0.5f, 0.0f,  // top right
-            0.5f, -0.5f, 0.0f,  // bottom right
-            -0.5f, -0.5f, 0.0f,  // bottom left
-            -0.5f,  0.5f, 0.0f   // top left 
-        };
+    std::unique_ptr<float[]> vertices(new float[] {
+        0.5f,  0.5f, 0.0f,  // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f,  // bottom left
+        -0.5f,  0.5f, 0.0f   // top left 
+    });
 
-        unsigned int indices[] = {  // note that we start from 0!
-            0, 1, 3,   // first triangle
-            1, 2, 3    // second triangle
-        }; 
+    std::unique_ptr<float[]> indices (new float[] {
+        0, 1, 3,   // first triangle
+        1, 2, 3    // second triangle
+    }); 
 
-        glGenVertexArrays(1, &vao);
-        
-        unsigned int bufs[2] = {}; 
-        glGenBuffers(2, bufs);
-        vertexBuf = bufs[0], indexBuf = bufs[1];
-
-        glBindVertexArray(vao);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);      //performs a copy so should be safe to clear array here
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-                                                                                        
-        //set vertex attribute pointers
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-        glEnableVertexAttribArray(0);
-
-        glBindVertexArray(0);
-    }
-
+    VaoWrapper vao(vertices, indices);
 
     while(!glfwWindowShouldClose(window))
     {
@@ -104,12 +83,8 @@ int main() {
         float timeValue = glfwGetTime();
         float greenVal = (sin(timeValue / 2.0)) + 0.5f;
         shader.bind();
-
         shader.setFloat("fragCol", greenVal);
-
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        vao.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();    
@@ -117,9 +92,6 @@ int main() {
     
     //CleanUp
     {
-        glDeleteVertexArrays(1, &vao);
-        glDeleteBuffers(1, &vertexBuf);
-        glDeleteBuffers(1, &indexBuf);
         glfwTerminate();
     }
     std::cout << "Done\n";
