@@ -7,7 +7,7 @@ extern "C" {
 #include <GL/gl.h>
 }
 
-VaoWrapper::VaoWrapper(const std::vector<float> vertices, const std::vector<float> indices) {
+VaoWrapper::VaoWrapper(const std::vector<float> vertices, const std::vector<unsigned int> indices) {
     glGenVertexArrays(1, &vao);
 
     unsigned int bufs[2]{}; 

@@ -16,7 +16,7 @@ class VaoWrapper {
         unsigned int currentIndexSize, currentVertexSize;
 
     public:
-        VaoWrapper(const std::vector<float> vertices, const std::vector<float> indices);
+        VaoWrapper(const std::vector<float> vertices, const std::vector<unsigned int> indices);
         ~VaoWrapper();
         void draw();
 };

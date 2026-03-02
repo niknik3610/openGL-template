@@ -64,7 +64,7 @@ int main() {
         -0.5f,  0.5f, 0.0f   // top left 
     };
 
-    std::vector<float> indices {
+    std::vector<unsigned int> indices {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }; 
