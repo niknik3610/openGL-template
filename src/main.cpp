@@ -57,17 +57,17 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     Shader shader(VERTEX_SHADER_PATH, FRAG_SHADER_PATH);
-    std::unique_ptr<float[]> vertices(new float[] {
+    std::vector<float> vertices{
         0.5f,  0.5f, 0.0f,  // top right
         0.5f, -0.5f, 0.0f,  // bottom right
         -0.5f, -0.5f, 0.0f,  // bottom left
         -0.5f,  0.5f, 0.0f   // top left 
-    });
+    };
 
-    std::unique_ptr<float[]> indices (new float[] {
+    std::vector<float> indices {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
-    }); 
+    }; 
 
     VaoWrapper vao(vertices, indices);
 

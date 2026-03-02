@@ -1,7 +1,7 @@
 #ifndef VAO_WRAPPER_H
 #define VAO_WRAPPER_H
 
-#include <memory>
+#include <vector>
 extern "C" {
 #include <cstdint>
 }
@@ -16,7 +16,7 @@ class VaoWrapper {
         unsigned int currentIndexSize, currentVertexSize;
 
     public:
-        VaoWrapper(const std::unique_ptr<float[]>& vertices, const std::unique_ptr<float[]> &indices);
+        VaoWrapper(const std::vector<float> vertices, const std::vector<float> indices);
         ~VaoWrapper();
         void draw();
 };
