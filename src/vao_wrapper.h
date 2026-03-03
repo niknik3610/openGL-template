@@ -2,6 +2,7 @@
 #define VAO_WRAPPER_H
 
 #include <vector>
+#include <memory>
 extern "C" {
 #include <cstdint>
 }
@@ -11,12 +12,17 @@ class VaoWrapper {
         constexpr static uint32_t VERTEX_SIZE = 3;
         constexpr static uint32_t VERTEX_MAX_COUNT = 6;
         constexpr static uint32_t VERTEX_ARRAY_SIZE = VERTEX_SIZE * VERTEX_MAX_COUNT;
+        
+        std::shared_ptr<std::vector<float>> vertices;
+        std::shared_ptr<std::vector<unsigned int>> indices;
 
         unsigned int vao, vertexBuf, indexBuf;
         unsigned int currentIndexSize, currentVertexSize;
 
     public:
-        VaoWrapper(const std::vector<float> vertices, const std::vector<unsigned int> indices);
+        VaoWrapper(const std::shared_ptr<std::vector<float>> vertices, const std::shared_ptr<std::vector<unsigned int>> indices);
+        void reBindVertexBuff();
+        void reBindIndexBuff();
         ~VaoWrapper();
         void draw();
 };
