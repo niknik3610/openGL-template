@@ -21,10 +21,15 @@ class VaoWrapper {
 
     public:
         VaoWrapper(const std::shared_ptr<std::vector<float>> vertices, const std::shared_ptr<std::vector<unsigned int>> indices);
+        ~VaoWrapper();
+
         void reBindVertexBuff();
         void reBindIndexBuff();
-        ~VaoWrapper();
         void draw();
+
+        void setBool(const std::string &name, bool value) const;  
+        void setInt(const std::string &name, int value) const;   
+        void setFloat(const std::string &name, float value) const;
 };
 
 #endif

@@ -1,7 +1,9 @@
 #include "vao_wrapper.h"
 #include "vector_utils.h"
+#include "square.h"
 #include <cstdio>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <shader.h>
 #include <vector>
@@ -57,7 +59,7 @@ int main() {
     glViewport(0, 0, DEFAULT_WINDOW_WIDTH , DEFAULT_WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    Shader shader(VERTEX_SHADER_PATH, FRAG_SHADER_PATH);
+    auto shader = std::make_shared<Shader>(Shader(VERTEX_SHADER_PATH, FRAG_SHADER_PATH));
     
     auto vertices = std::make_shared<std::vector<float>>(std::vector<float>{
         0.5f,  0.5f, 0.0f,  // top right
@@ -71,25 +73,23 @@ int main() {
         1, 2, 3    // second triangle
     }); 
 
-    VaoWrapper vao(vertices, indices);
+    auto vao = std::make_shared<VaoWrapper>(VaoWrapper(vertices, indices));
+
+    std::array<float, 3> green{0, 184, 3};
+    Pos pos = {0.4, -0.1, 0};
+    Square square(vao, shader, green, pos);
 
     while(!glfwWindowShouldClose(window))
     {
         //process logic
         process_input(window);
-        translateVector<float>(vertices, 0.01f, 0.01f, 0.0f);
-        vao.reBindVertexBuff();
 
         //rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         //Color stuff            
-        float timeValue = glfwGetTime();
-        float greenVal = (sin(timeValue / 2.0)) + 0.5f;
-        shader.bind();
-        shader.setFloat("fragCol", greenVal);
-        vao.draw();
+        square.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();    

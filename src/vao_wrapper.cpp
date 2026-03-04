@@ -32,6 +32,13 @@ VaoWrapper::VaoWrapper(const std::shared_ptr<std::vector<float>> vertices, const
     glBindVertexArray(0);
 }
 
+
+VaoWrapper::~VaoWrapper() {
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vertexBuf);
+    glDeleteBuffers(1, &indexBuf);
+}
+
 void VaoWrapper::draw() 
 {
     glBindVertexArray(vao);
@@ -47,10 +54,4 @@ void VaoWrapper::reBindVertexBuff() {
 void VaoWrapper::reBindIndexBuff() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(unsigned int), indices->data(), GL_STATIC_DRAW);
-}
-
-VaoWrapper::~VaoWrapper() {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vertexBuf);
-    glDeleteBuffers(1, &indexBuf);
 }

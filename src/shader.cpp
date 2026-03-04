@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <cassert>
 
 extern "C" {
 #include <glad/glad.h>
@@ -77,3 +78,7 @@ void Shader::setInt(const std::string &name, int value) const {
 void Shader::setFloat(const std::string &name, float value) const {
     glUniform1f(glGetUniformLocation(this->shaderProgram, name.c_str()), value);
 }
+void Shader::set3f(const std::string &name, std::array<float, 3> &value) const {
+    glUniform3f(glGetUniformLocation(this->shaderProgram, name.c_str()), value[0], value[1], value[2]);
+}
+
