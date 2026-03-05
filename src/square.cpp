@@ -22,13 +22,13 @@ void Square::translatePos(Pos movementVector) {
 
 void Square::draw() {
     this->vao->reBindVertexBuff();
+    this->shader->bind();
 
     this->shader->set3f("color", this->color);
     //TODO: cache this if not translated
     
     std::array<float, 3> posArr{pos.x, pos.y, pos.z};
     this->shader->set3f("offset", posArr);
-    this->shader->bind();
 
     this->vao->draw();
 }

@@ -59,7 +59,7 @@ int main() {
     glViewport(0, 0, DEFAULT_WINDOW_WIDTH , DEFAULT_WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    auto shader = std::make_shared<Shader>(Shader(VERTEX_SHADER_PATH, FRAG_SHADER_PATH));
+    auto shader = std::make_shared<Shader>(VERTEX_SHADER_PATH, FRAG_SHADER_PATH);
     
     auto vertices = std::make_shared<std::vector<float>>(std::vector<float>{
         0.5f,  0.5f, 0.0f,  // top right
@@ -73,9 +73,9 @@ int main() {
         1, 2, 3    // second triangle
     }); 
 
-    auto vao = std::make_shared<VaoWrapper>(VaoWrapper(vertices, indices));
+    auto vao = std::make_shared<VaoWrapper>(vertices, indices);
 
-    std::array<float, 3> green{0, 184, 3};
+    std::array<float, 3> green{0, 255.0f / 184.0f, 0};
     Pos pos = {0.4, -0.1, 0};
     Square square(vao, shader, green, pos);
 
