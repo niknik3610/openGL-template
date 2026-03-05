@@ -60,7 +60,7 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     auto shader = std::make_shared<Shader>(VERTEX_SHADER_PATH, FRAG_SHADER_PATH);
-    
+
     auto vertices = std::make_shared<std::vector<float>>(std::vector<float>{
         0.5f,  0.5f, 0.0f,  // top right
         0.5f, -0.5f, 0.0f,  // bottom right
@@ -72,15 +72,16 @@ int main() {
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     }); 
-
     auto vao = std::make_shared<VaoWrapper>(vertices, indices);
 
     std::array<float, 3> green{0, 184.0f / 255.0f, 0};
     Pos pos = {0.4, -0.1, 0};
     Square square(vao, shader, green, pos);
 
+    long framecount = 0;
     while(!glfwWindowShouldClose(window))
     {
+        std::cout << "frameCount: " << framecount++ << "\n";
         //process logic
         process_input(window);
 

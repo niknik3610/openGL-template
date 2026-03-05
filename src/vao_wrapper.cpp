@@ -10,6 +10,7 @@ extern "C" {
 VaoWrapper::VaoWrapper(const std::shared_ptr<std::vector<float>> vertices, const std::shared_ptr<std::vector<unsigned int>> indices) {
     this->vertices = vertices;
     this->indices = indices;
+    this->currentIndexSize = indices->size();
 
     glGenVertexArrays(1, &vao);
 
@@ -47,11 +48,15 @@ void VaoWrapper::draw()
 }
 
 void VaoWrapper::reBindVertexBuff() {
+    glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuf);
     glBufferData(GL_ARRAY_BUFFER, vertices->size() * sizeof(float), vertices->data(), GL_STATIC_DRAW);      //performs a copy so should be safe to clear array here
+    glBindVertexArray(0);
 }
 
 void VaoWrapper::reBindIndexBuff() {
+    glBindVertexArray(vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuf);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(unsigned int), indices->data(), GL_STATIC_DRAW);
+    glBindVertexArray(0);
 }

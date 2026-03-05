@@ -22,7 +22,6 @@ void Square::translatePos(Pos movementVector) {
 }
 
 void Square::draw() {
-    this->vao->reBindVertexBuff();
     this->shader->bind();
 
     std::cout << "Setting color: " << color[0] << ", " << color[1] << ", " << color[2] << std::endl;
@@ -33,5 +32,6 @@ void Square::draw() {
     std::cout << "Setting offset: " << posArr[0] << ", " << posArr[1] << ", " << posArr[2] << std::endl;
     this->shader->set3f("offset", posArr);
 
+    this->vao->reBindVertexBuff();
     this->vao->draw();
 }
