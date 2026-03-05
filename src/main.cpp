@@ -75,7 +75,7 @@ int main() {
 
     auto vao = std::make_shared<VaoWrapper>(vertices, indices);
 
-    std::array<float, 3> green{0, 255.0f / 184.0f, 0};
+    std::array<float, 3> green{0, 184.0f / 255.0f, 0};
     Pos pos = {0.4, -0.1, 0};
     Square square(vao, shader, green, pos);
 
