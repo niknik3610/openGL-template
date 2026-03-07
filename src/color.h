@@ -18,9 +18,9 @@ class Color {
 
         std::array<float, 3> getPrepared() {
             std::array<float, 3> cpy{};
-            cpy[R] = std::round(this->internalColor[R] * MAX_COL_VAL);
-            cpy[G] = std::round(this->internalColor[G] * MAX_COL_VAL);
-            cpy[B] = std::round(this->internalColor[B] * MAX_COL_VAL);
+            cpy[R] = static_cast<float>(this->internalColor[R]) / MAX_COL_VAL;
+            cpy[G] = static_cast<float>(this->internalColor[G]) / MAX_COL_VAL;
+            cpy[B] = static_cast<float>(this->internalColor[B]) / MAX_COL_VAL;
 
             return std::move(cpy);
         }

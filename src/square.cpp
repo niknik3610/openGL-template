@@ -4,10 +4,9 @@
 #include "vao_wrapper.h"
 #include <array>
 #include <memory>
-#include <iostream>
 
 Square::Square(std::shared_ptr<VaoWrapper> vao, std::shared_ptr<Shader> shader, std::array<float, 3> color, Pos pos) : 
-    vao(vao), pos(std::move(pos)), color(std::move(color)), shader(shader) 
+    vao(vao), pos(std::move(pos)), color(std::move(color)), shader(shader), posChanged(true) 
 { 
 }
 
@@ -19,23 +18,25 @@ void Square::translatePos(Pos* movementVector) {
     this->pos.x += movementVector->x;
     this->pos.y += movementVector->y;
     this->pos.z += movementVector->z;
+    this->posChanged = true;
 }
 
 
-void Square::setColor(std::unique_ptr<std::array<float, 3>> color) {
-    this->color = *color;
+void Square::setColor(std::array<float, 3> color) {
+    this->color = std::move(color);
 }
 
 void Square::draw() {
     this->shader->bind();
-
-    std::cout << "Setting color: " << color[0] << ", " << color[1] << ", " << color[2] << std::endl;
     this->shader->set3f("color", this->color);
-    //TODO: cache this if not translated
-    
-    std::array<float, 3> posArr{pos.x, pos.y, pos.z};
-    std::cout << "Setting offset: " << posArr[0] << ", " << posArr[1] << ", " << posArr[2] << std::endl;
-    this->shader->set3f("offset", posArr);
+
+    if (this->posChanged) {
+        this->cachedPos = {pos.x, pos.y, pos.z};
+        this->posChanged = false;
+    }
+
+    this->shader->set3f("offset", this->cachedPos);
+    this->posChanged = false;
 
     this->vao->reBindVertexBuff();
     this->vao->draw();

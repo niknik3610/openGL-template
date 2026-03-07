@@ -22,7 +22,7 @@ class Square {
         void setPos(Pos pos);
         void translatePos(Pos* movementVector);
         void draw();
-        void setColor(std::unique_ptr<std::array<float, 3>> color);
+        void setColor(std::array<float, 3> color);
 
     private:
         std::shared_ptr<VaoWrapper> vao;
@@ -30,5 +30,10 @@ class Square {
 
         Pos pos;
         std::array<float, 3> color;
+
+        std::array<float, 3> cachedPos;
+
+        bool posChanged;
+
 };
 #endif

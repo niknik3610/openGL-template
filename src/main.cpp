@@ -16,7 +16,7 @@ extern "C" {
 
 
 #define DEFAULT_WINDOW_WIDTH 800
-#define DEFAULT_WINDOW_HEIGHT 600
+#define DEFAULT_WINDOW_HEIGHT 800
 
 #define VERTEX_SHADER_PATH "../src/shaders/shader.vert"
 #define FRAG_SHADER_PATH "../src/shaders/shader.frag"
@@ -75,11 +75,13 @@ int main() {
 
     Color color(255, 100, 25);
     Pos pos{0.4, -0.1, 0};
-    Square square(vao, shader, color.getPrepared(), pos);
+
+    Square square(vao, shader, std::move(color.getPrepared()), pos);
     pos.x -= 0.1f;
     pos.y += 0.1f;
+
     color.modify(25, 50, 25);
-    Square square2(vao, shader, color.getPrepared(), pos);
+    Square square2(vao, shader, std::move(color.getPrepared()), pos);
 
     Pos movementVec{-0.005f, 0.005f};
 
@@ -88,8 +90,6 @@ int main() {
     {
         std::cout << "frameCount: " << framecount++ << "\n";
         square2.translatePos(&movementVec);
-        auto currCol = color.get();
-        // color.modify(currCol.get()[0] + framecount % 255, currCol.get()[1], currCol.get()[2]);
 
         //process logic
         process_input(window);
