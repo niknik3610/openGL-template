@@ -27,10 +27,8 @@ class Color {
 
         void modify(int r, int g, int b) {
             assert(r <= MAX_COL_VAL && g <= MAX_COL_VAL && b <= MAX_COL_VAL);
-            internalColor[R] = static_cast<double>(r) / MAX_COL_VAL;
-            internalColor[G] = static_cast<double>(g) / MAX_COL_VAL;
-            internalColor[B] = static_cast<double>(b) / MAX_COL_VAL;
-        }
+            this->internalColor[R] = r, this->internalColor[G] = g, this->internalColor[B] = b;
+         }
 
     private:
         std::array<int, 3> internalColor{};
