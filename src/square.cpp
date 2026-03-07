@@ -5,19 +5,19 @@
 #include <array>
 #include <memory>
 
-Square::Square(std::shared_ptr<VaoWrapper> vao, std::shared_ptr<Shader> shader, std::array<float, 3> color, Pos pos) : 
+Square::Square(std::shared_ptr<VaoWrapper> vao, std::shared_ptr<Shader> shader, std::array<float, 3> color, GLPos pos) : 
     vao(vao), pos(std::move(pos)), color(std::move(color)), shader(shader), posChanged(true) 
 { 
 }
 
-void Square::setPos(Pos pos) {
+void Square::setPos(GLPos pos) {
     this->pos = pos;
 }
 
-void Square::translatePos(Pos* movementVector) {
-    this->pos.x += movementVector->x;
-    this->pos.y += movementVector->y;
-    this->pos.z += movementVector->z;
+void Square::translatePos(const GLPos& movementVector) {
+    this->pos.x += movementVector.x;
+    this->pos.y += movementVector.y;
+    this->pos.z += movementVector.z;
     this->posChanged = true;
 }
 

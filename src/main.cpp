@@ -1,6 +1,7 @@
 #include "vao_wrapper.h"
 #include "color.h"
 #include "square.h"
+#include "gameboard_utils.h"
 #include <cstdio>
 #include <iostream>
 #include <memory>
@@ -74,22 +75,25 @@ int main() {
     auto vao = std::make_shared<VaoWrapper>(vertices, indices);
 
     Color color(255, 100, 25);
-    Pos pos{0.4, -0.1, 0};
 
-    Square square(vao, shader, std::move(color.getPrepared()), pos);
-    pos.x -= 0.1f;
-    pos.y += 0.1f;
+    GameBoardPos squareOnePos{5, 5, 0};
+    Square squareOne(vao, shader, std::move(color.getPrepared()), GameBoardUtils::translateBoardCoordsToGL(squareOnePos));
 
     color.modify(25, 50, 25);
-    Square square2(vao, shader, std::move(color.getPrepared()), pos);
+    
+    GameBoardPos squareTwoPos{5, 5, 0};
+    Square squareTwo(vao, shader, std::move(color.getPrepared()), GameBoardUtils::translateBoardCoordsToGL(squareTwoPos));
 
-    Pos movementVec{-0.005f, 0.005f};
+    GameBoardPos movementOneVec{1, 0};
+    GameBoardPos movementTwoVec{-1, 0};
 
     long framecount = 0;
     while(!glfwWindowShouldClose(window))
     {
         std::cout << "frameCount: " << framecount++ << "\n";
-        square2.translatePos(&movementVec);
+        // squareOnePos.y += 1 % GameBoardUtils::BOARDSIZE.y;
+        squareOne.translatePos(GameBoardUtils::translateBoardCoordsToGL(movementOneVec));
+        squareTwo.translatePos(GameBoardUtils::translateBoardCoordsToGL(movementTwoVec));
 
         //process logic
         process_input(window);
@@ -99,8 +103,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         //Color stuff            
-        square.draw();
-        square2.draw();
+        squareOne.draw();
+        squareTwo.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();    

@@ -6,7 +6,7 @@
 #include "shader.h"
 #include "vao_wrapper.h"
 
-struct Pos {
+struct GLPos {
     float x;
     float y;
     float z;
@@ -17,10 +17,10 @@ class Square {
         /** 
          * Expects Pos to be in screenspace coordinates! Use utils function to translate from game coordinates
          * */
-        Square(std::shared_ptr<VaoWrapper> vao, std::shared_ptr<Shader> shader, std::array<float, 3> color, Pos pos);
+        Square(std::shared_ptr<VaoWrapper> vao, std::shared_ptr<Shader> shader, std::array<float, 3> color, GLPos pos);
 
-        void setPos(Pos pos);
-        void translatePos(Pos* movementVector);
+        void setPos(GLPos pos);
+        void translatePos(const GLPos& movementVector);
         void draw();
         void setColor(std::array<float, 3> color);
 
@@ -28,7 +28,7 @@ class Square {
         std::shared_ptr<VaoWrapper> vao;
         std::shared_ptr<Shader> shader;
 
-        Pos pos;
+        GLPos pos;
         std::array<float, 3> color;
 
         std::array<float, 3> cachedPos;
