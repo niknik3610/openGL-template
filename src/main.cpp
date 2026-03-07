@@ -75,13 +75,22 @@ int main() {
     auto vao = std::make_shared<VaoWrapper>(vertices, indices);
 
     std::array<float, 3> green{0, 184.0f / 255.0f, 0};
-    Pos pos = {0.4, -0.1, 0};
+    Pos pos{0.4, -0.1, 0};
     Square square(vao, shader, green, pos);
+    pos.x -= 0.1f;
+    pos.y += 0.1f;
+    green[0] = 1.0f;
+    Square square2(vao, shader, green, pos);
+
+    Pos movementVec{-0.005f, 0.005f};
 
     long framecount = 0;
     while(!glfwWindowShouldClose(window))
     {
         std::cout << "frameCount: " << framecount++ << "\n";
+        square2.translatePos(&movementVec);
+        square2.setColor(std::make_unique<std::array<float,3>>(std::array<float, 3>{framecount % 255 / 255.0f, 184.0f / 255.0f, 0}));
+
         //process logic
         process_input(window);
 
@@ -91,6 +100,7 @@ int main() {
 
         //Color stuff            
         square.draw();
+        square2.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();    

@@ -15,10 +15,15 @@ void Square::setPos(Pos pos) {
     this->pos = pos;
 }
 
-void Square::translatePos(Pos movementVector) {
-    this->pos.x += movementVector.x;
-    this->pos.y += movementVector.y;
-    this->pos.z += movementVector.z;
+void Square::translatePos(Pos* movementVector) {
+    this->pos.x += movementVector->x;
+    this->pos.y += movementVector->y;
+    this->pos.z += movementVector->z;
+}
+
+
+void Square::setColor(std::unique_ptr<std::array<float, 3>> color) {
+    this->color = *color;
 }
 
 void Square::draw() {
