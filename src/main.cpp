@@ -1,5 +1,5 @@
 #include "vao_wrapper.h"
-#include "vector_utils.h"
+#include "color.h"
 #include "square.h"
 #include <cstdio>
 #include <iostream>
@@ -12,7 +12,6 @@ extern "C" {
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
-#include <cmath>
 }
 
 
@@ -74,13 +73,13 @@ int main() {
     }); 
     auto vao = std::make_shared<VaoWrapper>(vertices, indices);
 
-    std::array<float, 3> green{0, 184.0f / 255.0f, 0};
+    Color color(255, 100, 25);
     Pos pos{0.4, -0.1, 0};
-    Square square(vao, shader, green, pos);
+    Square square(vao, shader, color.getPrepared(), pos);
     pos.x -= 0.1f;
     pos.y += 0.1f;
-    green[0] = 1.0f;
-    Square square2(vao, shader, green, pos);
+    color.modify(25, 50, 25);
+    Square square2(vao, shader, color.getPrepared(), pos);
 
     Pos movementVec{-0.005f, 0.005f};
 
@@ -89,7 +88,8 @@ int main() {
     {
         std::cout << "frameCount: " << framecount++ << "\n";
         square2.translatePos(&movementVec);
-        square2.setColor(std::make_unique<std::array<float,3>>(std::array<float, 3>{framecount % 255 / 255.0f, 184.0f / 255.0f, 0}));
+        auto currCol = color.get();
+        // color.modify(currCol.get()[0] + framecount % 255, currCol.get()[1], currCol.get()[2]);
 
         //process logic
         process_input(window);
