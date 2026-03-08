@@ -1,3 +1,4 @@
+#OpenGLTemplate CMakeLists
 cmake_minimum_required(VERSION 3.10)
 
 # #Sets to new boost policty if using a cringe version of cmake (mine)
@@ -14,7 +15,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #Dependencies 
-
 find_package(Threads REQUIRED)
 find_package(glfw3 3.3 REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -30,21 +30,21 @@ pkg_check_modules(WAYLAND_LIBS REQUIRED
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 set(GLAD_SOURCE "include/glad/src/glad.c")
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLAD_SOURCE})
+add_library(GLTemplate STATIC ${SOURCES} ${GLAD_SOURCE})
 
 #Includes
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(GLTemplate PUBLIC
     "include/glad/include"   
     "src"                    
     ${WAYLAND_LIBS_INCLUDE_DIRS}
 )
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(GLTemplate PUBLIC
     "src/*.h"                    
 )
 
 
-#Linking
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+# Linking
+target_link_libraries(GLTemplate PRIVATE 
     glfw
     GL 
     ${WAYLAND_LIBS_LIBRARIES}
@@ -52,4 +52,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     dl
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set_target_properties(GLTemplate PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
