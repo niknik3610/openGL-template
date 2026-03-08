@@ -38,6 +38,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     "src"                    
     ${WAYLAND_LIBS_INCLUDE_DIRS}
 )
+target_include_directories(${PROJECT_NAME} PUBLIC
+    "src/*.h"                    
+)
+
 
 #Linking
 target_link_libraries(${PROJECT_NAME} PRIVATE 

@@ -1,14 +1,26 @@
 #ifndef GAMEBOARD_UTILS_H
 #define GAMEBOARD_UTILS_H
 
-#include "square.h"
 #include <cassert>
+#include <format>
 
-struct GameBoardPos {
-    int x;
-    int y;
-    int z;
+template<typename T>
+struct Pos {
+    T x;
+    T y;
+    T z;
 };
+
+struct GameBoardPos : Pos<int> {
+};
+
+struct MovVector : Pos<int> {
+};
+
+struct GLPos : Pos<float> {
+};
+
+
 
 class GameBoardUtils {
     public:
@@ -25,10 +37,28 @@ class GameBoardUtils {
 
             //map to 0-2, then subtract 1 to get pos
             return {
-                static_cast<float>(pos.x) / BOARDSIZE.x * 2 - 1,
-                static_cast<float>(pos.y) / BOARDSIZE.y * 2 - 1,
-                static_cast<float>(pos.z) / BOARDSIZE.z * 2 - 1
+                pos.x / static_cast<float>(BOARDSIZE.x) * 2.0f - 1.0f,
+                pos.y / static_cast<float>(BOARDSIZE.y) * 2.0f - 1.0f,
+                0           //probably temp
             };
+        };
+
+        static GLPos translateMovVecToGL(const MovVector &pos) {
+            return {
+                pos.x / static_cast<float>(BOARDSIZE.x) * 2.0f,
+                pos.y / static_cast<float>(BOARDSIZE.y) * 2.0f,
+                pos.z / static_cast<float>(BOARDSIZE.y) * 2.0f,
+            };
+        }
+
+        static std::string posToString(const GameBoardPos &pos) {
+            return std::format("{}, {}, {}", pos.x, pos.y, pos.z);
+        }
+        static std::string posToString(const GLPos &pos) {
+            return std::format("{}, {}, {}", pos.x, pos.y, pos.z);
+        }
+        static std::string posToString(const MovVector &pos) {
+            return std::format("{}, {}, {}", pos.x, pos.y, pos.z);
         }
 };
 

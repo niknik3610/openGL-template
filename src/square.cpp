@@ -1,4 +1,5 @@
 #include "square.h"
+#include "gameboard_utils.h"
 
 #include "shader.h"
 #include "vao_wrapper.h"

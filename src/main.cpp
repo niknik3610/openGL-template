@@ -76,24 +76,26 @@ int main() {
 
     Color color(255, 100, 25);
 
-    GameBoardPos squareOnePos{5, 5, 0};
+    GameBoardPos squareOnePos{0, 0, 0};
     Square squareOne(vao, shader, std::move(color.getPrepared()), GameBoardUtils::translateBoardCoordsToGL(squareOnePos));
 
     color.modify(25, 50, 25);
     
-    GameBoardPos squareTwoPos{5, 5, 0};
+    GameBoardPos squareTwoPos{9, 9, 0};
     Square squareTwo(vao, shader, std::move(color.getPrepared()), GameBoardUtils::translateBoardCoordsToGL(squareTwoPos));
 
-    GameBoardPos movementOneVec{1, 0};
-    GameBoardPos movementTwoVec{-1, 0};
+    MovVector movementOneVec{1, 1, 0};
+    MovVector movementTwoVec{-1, -1, 0};
 
     long framecount = 0;
     while(!glfwWindowShouldClose(window))
     {
         std::cout << "frameCount: " << framecount++ << "\n";
         // squareOnePos.y += 1 % GameBoardUtils::BOARDSIZE.y;
-        squareOne.translatePos(GameBoardUtils::translateBoardCoordsToGL(movementOneVec));
-        squareTwo.translatePos(GameBoardUtils::translateBoardCoordsToGL(movementTwoVec));
+        if (framecount % 100 == 0) {
+            squareOne.translatePos(GameBoardUtils::translateMovVecToGL(movementOneVec));
+            squareTwo.translatePos(GameBoardUtils::translateMovVecToGL(movementTwoVec));
+        }
 
         //process logic
         process_input(window);
