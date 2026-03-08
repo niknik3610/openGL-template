@@ -32,7 +32,7 @@ void process_input(GLFWwindow* window) {
     }
 }
 
-int main() {
+int exampleMain() {
     glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_WAYLAND);
     if (!glfwInit()) {
         const char* description;
