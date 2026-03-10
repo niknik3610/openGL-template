@@ -29,6 +29,5 @@ class Square {
         std::array<float, 3> cachedPos;
 
         bool posChanged;
-
 };
 #endif
